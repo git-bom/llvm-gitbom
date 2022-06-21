@@ -24,3 +24,24 @@ jobs:
           config_file: .ci/yamllint.yml
           strict: true
           file_or_dir: .github/
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - name: Configure
+        run: |
+          pwd
+          ls
+          mkdir -p build
+          cd build
+          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_ENABLE_PROJECTS="clang;lld" ../llvm-project/llvm
+      - name: Build
+        run: |
+          cd build
+          pwd
+          ls
+          ninja
